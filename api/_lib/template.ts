@@ -1,3 +1,4 @@
+import { readFileSync } from 'fs'
 import marked from 'marked'
 import { sanitizeHtml } from './sanitizer'
 import { ParsedRequest } from './types'
@@ -5,7 +6,14 @@ const twemoji = require('twemoji')
 const twOptions = { folder: 'svg', ext: '.svg' }
 const emojify = (text: string) => twemoji.parse(text, twOptions)
 
-function getCss(theme: string, fontSize: string) {
+const rglr = readFileSync(
+  `${__dirname}/../../public/fonts/NittiGrotesk-Normal.woff2`
+).toString('base64')
+const bold = readFileSync(
+  `${__dirname}/../../public/fonts/NittiGrotesk-Bold.woff2`
+).toString('base64')
+
+function getCss(theme: string, fontSize: string, text: string) {
   let background = '#ffffff'
   let radial = '#dde1e4'
 
@@ -15,6 +23,19 @@ function getCss(theme: string, fontSize: string) {
   }
 
   return `
+    @font-face {
+      font-family: 'Nitti Grotesk';
+      src: url(data:font/woff2;charset=utf-8;base64,${rglr}) format('woff2');
+      font-weight: normal;
+      font-style: normal;
+    }
+    @font-face {
+      font-family: 'Nitti Grotesk';
+      src: url(data:font/woff2;charset=utf-8;base64,${bold}) format('woff2');
+      font-weight: bold;
+      font-style: normal;
+    }
+
     body {
       background: ${background};
       background-image: radial-gradient(circle at 25px 25px, ${radial} 3%, transparent 0%),   
@@ -25,7 +46,7 @@ function getCss(theme: string, fontSize: string) {
       text-align: center;
       align-items: center;
       justify-content: center;
-      font-family: 'Gotham A', 'Gotham B', sans-serif;
+      font-family: 'Nitti Grotesk', system-ui, sans-serif;
       font-size: ${sanitizeHtml(fontSize)};
       font-style: normal;
       letter-spacing: -.01em;
@@ -75,26 +96,24 @@ function getCss(theme: string, fontSize: string) {
       align-items: center;
       justify-content: center;
     }
-    .nyu {
-      color: ${theme === 'dark' ? '#c975ff' : '#57068c'};
-      font-weight: 700;
-      font-size: 100px;
-      padding-left: .25em;
+    .subbrand {
+      color: ${theme === 'dark' ? '#79ffe1' : '#0070f3'};
+      font-weight: bold;
+      font-size: 1.125em;
     }
     
     .heading {
-      ${
-        theme === 'dark'
-          ? 'background-image: linear-gradient(to bottom right, #c975ff, #8900e1);'
-          : 'background-image: linear-gradient(to bottom right, #8900e1 12.5%, #57068c);'
+      color: ${
+        text.toLowerCase().includes('music')
+          ? '#ff365d'
+          : theme === 'dark'
+          ? '#79ffe1'
+          : '#0070f3'
       };
-      background-repeat: no-repeat;
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      margin: 100px 50px 25px;
-      font-weight: 700;
+      margin: 100px 50px 0;
+      padding-bottom: 25px;
       line-height: 0.875;
-      letter-spacing: -.06em;
+      font-weight: bold;
     }
 
     .heading * {
@@ -105,7 +124,6 @@ function getCss(theme: string, fontSize: string) {
       font-size: ${Number(sanitizeHtml(fontSize).match(/\d+/)) * 0.375}px;
       text-transform: uppercase;
       color: #7a8c97;
-      font-weight: 400;
       letter-spacing: 0;
     }
     
@@ -131,13 +149,12 @@ export function getHtml(parsedReq: ParsedRequest) {
   <title>Generated Image</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <style>
-    ${getCss(theme, fontSize)}
+    ${getCss(theme, fontSize, text)}
   </style>
-  <link rel="stylesheet" href="http://assets.lachlanjc.me/bf566c6457ac/gotham.css" />
   <body>
     <div class="brand">
       <img class="avatar" src="https://github.com/lachlanjc.png">
-      @lachlanjc @ <span class="nyu">IMA</span>
+      @lachlanjc/<span class="subbrand">notebook</span>
     </div>
     <div class="spacer">
       ${
@@ -155,7 +172,7 @@ export function getHtml(parsedReq: ParsedRequest) {
         md ? marked(text) : sanitizeHtml(text)
       )}</div>
       ${
-        caption
+        caption !== 'undefined'
           ? `<div class="caption">${emojify(sanitizeHtml(caption))}</div>`
           : ''
       }

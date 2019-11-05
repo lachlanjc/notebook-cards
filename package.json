@@ -1,7 +1,7 @@
 {
-  "name": "ima-cards",
+  "name": "notebook-cards",
   "version": "1.0.0",
-  "description": "Generate Open Graph images for @lachlanjc/ima",
+  "description": "Generate Open Graph images for @lachlanjc/notebook",
   "engines": {
     "node": "10.x"
   },
