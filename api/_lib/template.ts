@@ -1,4 +1,4 @@
-import { readFileSync } from 'fs'
+// import { readFileSync } from 'fs'
 import marked from 'marked'
 import { sanitizeHtml } from './sanitizer'
 import { ParsedRequest } from './types'
@@ -6,12 +6,12 @@ const twemoji = require('twemoji')
 const twOptions = { folder: 'svg', ext: '.svg' }
 const emojify = (text: string) => twemoji.parse(text, twOptions)
 
-const rglr = readFileSync(
-  `${__dirname}/../../public/fonts/NittiGrotesk-Normal.woff2`
-).toString('base64')
-const bold = readFileSync(
-  `${__dirname}/../../public/fonts/NittiGrotesk-Bold.woff2`
-).toString('base64')
+// const rglr = readFileSync(
+//   `${__dirname}/../../public/fonts/NittiGrotesk-Normal.woff2`
+// ).toString('base64')
+// const bold = readFileSync(
+//   `${__dirname}/../../public/fonts/NittiGrotesk-Bold.woff2`
+// ).toString('base64')
 
 function getCss(theme: string, fontSize: string, text: string) {
   let background = '#ffffff'
@@ -23,18 +23,9 @@ function getCss(theme: string, fontSize: string, text: string) {
   }
 
   return `
-    @font-face {
-      font-family: 'Nitti Grotesk';
-      src: url(data:font/woff2;charset=utf-8;base64,${rglr}) format('woff2');
-      font-weight: normal;
-      font-style: normal;
-    }
-    @font-face {
-      font-family: 'Nitti Grotesk';
-      src: url(data:font/woff2;charset=utf-8;base64,${bold}) format('woff2');
-      font-weight: bold;
-      font-style: normal;
-    }
+    @font-face{font-family:Whyte;font-style:normal;font-weight:400;src:url(https://cdn.glitch.com/4d99d0f7-c364-44a5-b1b9-2c3c3f5cb333%2FWhyte-Regular-412d6af025a4cfe3d36ab0850f3b258f.woff2?v=1582525105493) format("woff2");font-display:swap;}
+    @font-face{font-family:Whyte;font-style:normal;font-weight:700;src:url(https://cdn.glitch.com/4d99d0f7-c364-44a5-b1b9-2c3c3f5cb333%2FWhyte-Bold-259eea7f642aa1973e3688f57b803286.woff2?v=1582525121432) format("woff2");font-display:swap;}
+    @font-face{font-family:WhyteInktrap;font-style:normal;font-weight:700;src:url(https://cdn.glitch.com/4d99d0f7-c364-44a5-b1b9-2c3c3f5cb333%2FWhyteInktrap-Bold-d5fda619e54a4948a42c0f133a4ad5ed.woff2?v=1582525136783) format("woff2");font-display:swap;}
 
     body {
       background: ${background};
@@ -46,7 +37,7 @@ function getCss(theme: string, fontSize: string, text: string) {
       text-align: center;
       align-items: center;
       justify-content: center;
-      font-family: 'Nitti Grotesk', system-ui, sans-serif;
+      font-family: Whyte, system-ui, sans-serif;
       font-size: ${sanitizeHtml(fontSize)};
       font-style: normal;
       letter-spacing: -.01em;
@@ -63,43 +54,56 @@ function getCss(theme: string, fontSize: string, text: string) {
     }
 
     .img-wrapper {
+      margin: 50px 0 -50px;
+      padding-top: 125px;
       display: flex;
       align-items: center;
       align-content: center;
       justify-content: center;
     }
-
-    .logo {
-      width: 275px;
-      height: 275px;
+    .img {
+      width: 200px;
+      height: 200px;
     }
-
+    .img[src*="//github.com/"] {
+      border-radius: 75px;
+      width: 150px;
+      height: 150px;
+    }
     .plus {
-      color: #7a8c97;
-      font-size: 100px;
-      padding: 0 50px;
+      color: #8492a6;
+      font-size: 75px;
+      padding: 0 25px;
     }
-
+    .container {
+      margin: 125px 150px 150px;
+    }
     .spacer {
-      margin: 100px 150px 150px;
+      margin: 50px 0;
+      width: 100%;
     }
-
     .brand {
-      font-size: 90px;
+      font-size: 105px;
       padding: 50px;
       text-align: center;
+      font-weight: bold;
       position: absolute;
       top: 0;
       width: 100%;
-      color: #7a8c97;
+      color: #0069ff;
       display: flex;
-      align-items: center;
       justify-content: center;
+      align-items: center;
     }
-    .subbrand {
-      color: ${theme === 'dark' ? '#79ffe1' : '#0070f3'};
-      font-weight: bold;
-      font-size: 1.125em;
+    .brand span {
+      color: #8492a6;
+      font-weight: normal;
+      margin-right: 0.1em;
+    }
+    .logo {
+      border-radius: 75px;
+      width: 125px;
+      margin: 0 50px;
     }
     
     .heading {
@@ -110,10 +114,11 @@ function getCss(theme: string, fontSize: string, text: string) {
           ? '#79ffe1'
           : '#0070f3'
       };
-      margin: 100px 50px 0;
+      font-family: WhyteInktrap, system-ui;
+      font-weight: bold;
+      margin: 75px 50px 0;
       padding-bottom: 25px;
       line-height: 0.875;
-      font-weight: bold;
     }
 
     .heading * {
@@ -153,26 +158,26 @@ export function getHtml(parsedReq: ParsedRequest) {
   </style>
   <body>
     <div class="brand">
-      <img class="avatar" src="https://github.com/lachlanjc.png">
-      @lachlanjc/<span class="subbrand">notebook</span>
+      <img class="logo" src="https://github.com/lachlanjc.png">
+      <span>@lachlanjc/</span>notebook
     </div>
-    <div class="spacer">
+    <div class="container">
       ${
         images.length > 0
           ? `<div class="img-wrapper">
-          <img class="logo" src="${sanitizeHtml(images[0])}" />
-          ${images.slice(1).map(img => {
-            return `<div class="plus">+</div>
-            <img class="logo" src="${sanitizeHtml(img)}" />`
-          })}
-        </div>`
-          : ''
+              <img class="img" src="${sanitizeHtml(images[0])}" />
+              ${images.slice(1).map(img => {
+                return `<div class="plus">+</div>
+                <img class="img" src="${sanitizeHtml(img)}" />`
+              })}
+            </div>`
+          : '<div class="spacer"></div>'
       }
       <div class="heading">${emojify(
         md ? marked(text) : sanitizeHtml(text)
       )}</div>
       ${
-        caption !== 'undefined'
+        caption && caption !== 'undefined'
           ? `<div class="caption">${emojify(sanitizeHtml(caption))}</div>`
           : ''
       }

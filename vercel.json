@@ -1,5 +1,4 @@
 {
-  "name": "notebook-cards",
   "public": true,
   "functions": { "api/**": { "memory": 1024 } },
   "rewrites": [{ "source": "/(.+)", "destination": "/api" }],
