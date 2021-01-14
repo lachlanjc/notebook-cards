@@ -14,12 +14,12 @@ const emojify = (text: string) => twemoji.parse(text, twOptions)
 // ).toString('base64')
 
 function getCss(theme: string, fontSize: string, text: string) {
-  let background = '#ffffff'
-  let radial = '#dde1e4'
+  let background = '#ffeaeb'
+  let radial = 'rgba(0,0,0,0.125)'
 
   if (theme === 'dark') {
-    background = '#17171d'
-    radial = '#3c4858'
+    background = '#121217'
+    radial = '#273444'
   }
 
   return `
@@ -90,7 +90,7 @@ function getCss(theme: string, fontSize: string, text: string) {
       position: absolute;
       top: 0;
       width: 100%;
-      color: #0069ff;
+      color: #3b47a8;
       display: flex;
       justify-content: center;
       align-items: center;
@@ -111,8 +111,8 @@ function getCss(theme: string, fontSize: string, text: string) {
         text.toLowerCase().includes('music')
           ? '#ff365d'
           : theme === 'dark'
-          ? '#79ffe1'
-          : '#0070f3'
+          ? '#ff2467'
+          : '#3b47a8'
       };
       font-family: WhyteInktrap, system-ui;
       font-weight: bold;
